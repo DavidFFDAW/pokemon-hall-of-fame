@@ -1,0 +1,249 @@
+:root {
+	--type-color: #333;
+}
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+html,
+body {
+    color: #333;
+    min-height: 100dvh;
+    background-color: #f5f5f5;
+    scroll-behavior: smooth;
+	overflow-x: hidden;
+}
+
+body main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a {
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+label.label {
+    display: block;
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+label.label span {
+    color: #333;
+    display: block;
+    font-weight: 600;
+}
+
+label.label input,
+label.label select,
+label.label textarea {
+    width: 100%;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 4px;
+    resize: vertical;
+}
+
+label.label textarea {
+    min-height: 100px;
+}
+label.label.radio-label {
+    position: relative;
+    margin-bottom: 0;
+}
+label.label.radio-label input[type="radio"],
+label.label.radio-label input[type="checkbox"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+label.label.radio-label input[type="radio"] + .label,
+label.label.radio-label input[type="checkbox"] + .label {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+label.label.radio-label input[type="radio"]:checked + .label,
+label.label.radio-label input[type="checkbox"]:checked + .label {
+    background-color: #fff;
+    color: #007bff;
+    border-color: #007bff;
+	font-weight: 600;
+	border-width: 2px;
+}
+
+button,
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.overflowable-table {
+	overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+	overflow-x: auto;
+}
+
+table th,
+table td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+	text-align: center;
+}
+
+table th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+.box {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 15px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+.type.type-normal {
+	background-color: #828282;
+	--type-color: #828282;
+	color: #fff;
+}
+.type.type-fire {
+	background-color: #e4613e;
+	--type-color: #e4613e;
+	color: #fff;
+}
+.type.type-water {
+	background-color: #3099e1;
+	--type-color: #3099e1;
+	color: #fff;
+}
+.type.type-electric {
+	background-color: #dfbc28;
+	--type-color: #dfbc28;
+	color: #fff;
+}
+.type.type-grass {
+	background-color: #439837;
+	--type-color: #439837;
+	color: #fff;
+}
+.type.type-ice {
+	background-color: #47c8c8;
+	--type-color: #47c8c8;
+	color: #fff;
+}
+.type.type-fighting {
+	background-color: #e49021;
+	--type-color: #e49021;
+	color: #fff;
+}
+.type.type-poison {
+	background-color: #9354cb;
+	--type-color: #9354cb;
+	color: #fff;
+}
+.type.type-ground {
+	background-color: #a4733c;
+	--type-color: #a4733c;
+	color: #fff;
+}
+.type.type-flying {
+	background-color: #74aad0;
+	--type-color: #74aad0;
+	color: #fff;
+}
+.type.type-psychic {
+	background-color: #e96c8c;
+	--type-color: #e96c8c;
+	color: #fff;
+}
+.type.type-bug {
+	background-color: #9f9f28;
+	--type-color: #9f9f28;
+	color: #fff;
+}
+.type.type-rock {
+	background-color: #a9a481;
+	--type-color: #a9a481;
+	color: #fff;
+}
+.type.type-ghost {
+	background-color: #6f4570;
+	--type-color: #6f4570;
+	color: #fff;
+}
+.type.type-dragon {
+	background-color: #576fbc;
+	--type-color: #576fbc;
+	color: #fff;
+}
+.type.type-dark {
+	background-color: #4f4747;
+	--type-color: #4f4747;
+	color: #fff;
+}
+.type.type-steel {
+	background-color: #74b0cb;
+	--type-color: #74b0cb;
+	color: #fff;
+}
+.type.type-fairy {
+	background-color: #e18ce1;
+	--type-color: #e18ce1;
+	color: #fff;
+}

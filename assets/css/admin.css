@@ -1,0 +1,84 @@
+main.admin-panel-content>ul.flash-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    list-style: none;
+    padding: 0;
+    position: fixed;
+    top: calc(1rem + 45px);
+    right: 1rem;
+    z-index: 1000;
+}
+
+main.admin-panel-content>ul.flash-messages li.flash-message {
+    padding: 4px 1.2rem;
+    border-radius: 4px;
+    color: #fff;
+    animation: fadeIn 0.5s, fadeOut 0.5s 3.5s forwards;
+}
+
+main.admin-panel-content>ul.flash-messages li.flash-success {
+    background-color: #4caf50;
+}
+
+main.admin-panel-content>ul.flash-messages li.flash-error {
+    background-color: #f44336;
+}
+
+header.admin-panel-header.admin-header {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #333;
+    color: #fff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+header.admin-panel-header.admin-header nav {
+    width: 100%;
+    display: block;
+}
+
+header.admin-panel-header.admin-header nav>ul {
+    width: 100%;
+    display: flex;
+    list-style: none;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+}
+header.admin-panel-header.admin-header nav>ul > li:last-child {
+    padding-right: 15px;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
