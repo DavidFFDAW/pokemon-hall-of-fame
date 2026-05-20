@@ -47,27 +47,19 @@ class PokeApi {
 		return $pokemon;
 	}
 
+	public static function getVersionData(string $version): ?array {
+		$url = self::$baseUrl . 'version/' . $version;
+		$versionData = self::fetchData($url);
+		if (!$versionData) return null;
+		return $versionData;
+	}
+
 	public static function getPokemonMoves(string $id): ?array {
 		$moves = [];
-		$tr = json_decode(file_get_contents(BASE_PATH.'/moves.json'), true);
 		$url = self::$baseUrl . 'pokemon/' . $id;
 		$pokemon = self::fetchData($url);
 		if (!$pokemon) return [];
-
-		foreach ($pokemon['moves'] ?? [] as $move) {
-			$moveID = basename($move['move']['url'] ?? '');
-			$moveName = $move['move']['name'] ?? 'Unknown';
-			$moveDatas = $tr[$moveName] ?? null;
-			if (empty($moveID) || empty($moveName)) continue;
-			if (!isset($moveDatas)) continue;
-
-			$moves[$moveName] = array_merge([
-				'id' => $moveID,
-				'pokemon' => $pokemon['name']
-			], $moveDatas);
-		}
-
-		return $moves;
+		return $pokemon['moves'] ?? [];
 	}
 
     private static function fetchData(string $url) {

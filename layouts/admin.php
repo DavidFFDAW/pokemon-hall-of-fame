@@ -20,7 +20,7 @@
                 <li><a href="<?= BASE_URI ?>admin/dashboard">Admin</a></li>
                 <li><a href="<?= BASE_URI ?>admin/users/list">Usuarios</a></li>
                 <li><a href="<?= BASE_URI ?>admin/games">Juegos</a></li>
-                <li><a href="<?= BASE_URI ?>admin/pokemons/list">Pokémons</a></li>
+                <li><a href="<?= BASE_URI ?>admin/pokemons">Pokémons</a></li>
                 <li><a href="<?= BASE_URI ?>admin/editor">SQL</a></li>
                 <!-- Add more admin links as needed -->
             </ul>

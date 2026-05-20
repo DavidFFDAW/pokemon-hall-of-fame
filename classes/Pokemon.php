@@ -48,6 +48,15 @@ class Pokemon
 		return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 	}
 
+	public function getPokemonByIdWithGame(int $id): ?array
+	{
+		$stmt = $this->pdo->prepare('SELECT p.*, g.game_key FROM ' . $this->table . ' p INNER JOIN games g ON p.game_id = g.id WHERE p.id = :id');
+		$stmt->execute(['id' => $id]);
+		if (!$stmt) return null;
+
+		return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+	}
+
 	public function upsert(array $data, ?array $savedPokemon = null): bool
 	{
 		$this->checkRequiredFields($data);

@@ -128,6 +128,15 @@ button,
     border-radius: 4px;
     cursor: pointer;
 }
+.btn.create-button {
+	position: fixed;
+	bottom: 20px;
+	right: calc((100% - 800px) / 2);
+	color: #28a745;
+	background-color: #bdf3c9;
+	border: 1px solid #28a745;
+	box-shadow: 0 0 6px rgba(40, 167, 69, 0.3);
+}
 
 .overflowable-table {
 	overflow-x: auto;
