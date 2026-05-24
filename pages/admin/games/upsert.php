@@ -1,8 +1,7 @@
 <?php
 $id = $_GET['id'] ?? null;
-$games = PokeApi::getGames();
 $gamesModel = new Games();
-$regions = PokeApi::getRegions();
+$games = PokeApi::getGames();
 
 $game = null;
 if ($id) $game = $gamesModel->getGameById($id);
@@ -12,6 +11,7 @@ try {
     if (is_post_request()) {
         $post = new PostController();
         $post->upsertGame();
+        redirect('/admin/games');
     }
 } catch (Exception $e) {
     Flash::add('Error al guardar el juego: ' . $e->getMessage(), 'error');

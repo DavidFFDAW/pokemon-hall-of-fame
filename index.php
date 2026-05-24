@@ -25,6 +25,7 @@ define('CSS_URI', BASE_URI . 'assets/css');
 define('CURRENT_URL', $_SERVER['REQUEST_URI']);
 define('PATHNAME', rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
 define('DEFAULT_IMAGE', 'https://placeholdit.com/400x400/dddddd/999999');
+define('IS_POST_REQUEST', $_SERVER['REQUEST_METHOD'] === 'POST');
 
 require BASE_PATH . '/functions.php';
 

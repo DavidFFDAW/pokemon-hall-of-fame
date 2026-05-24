@@ -32,6 +32,5 @@ class PostController
         if (!$upserted) {
             Flash::add('error', 'Ocurrió un error al guardar el juego. Inténtalo de nuevo.');
         }
-        redirect('/admin/games');
     }
 }
