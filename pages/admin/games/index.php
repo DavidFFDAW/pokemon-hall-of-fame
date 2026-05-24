@@ -1,5 +1,5 @@
 <?php
-$db = new Games(Database::getInstance());
+$db = new Games();
 $games = $db->getGames();
 ?>
 

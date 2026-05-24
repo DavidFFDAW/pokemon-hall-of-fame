@@ -3,6 +3,8 @@
 class Games
 {
 	private \PDO $pdo;
+    private Database $database;
+
 	private $table = 'games';
 	private $required = [
 		'game_key',
@@ -10,9 +12,11 @@ class Games
 		'player_name'
 	];
 
-	public function __construct(Database $database)
+	public function __construct()
 	{
-		$this->pdo = $database->getConnection();
+        $instance = Database::getInstance();
+        $this->database = $instance;
+		$this->pdo = $instance->getConnection();
 	}
 
 	public function checkRequiredFields(array $data): bool
@@ -25,7 +29,7 @@ class Games
 
 	public function getGames(): array
 	{
-		$games = $this->pdo->query('SELECT * FROM ' . $this->table . ' ORDER BY created_at DESC');
+		$games = $this->pdo->query('SELECT * FROM ' . $this->table . ' ORDER BY name DESC');
 		if (!$games) return [];
 		return $games->fetchAll(PDO::FETCH_ASSOC);
 	}
