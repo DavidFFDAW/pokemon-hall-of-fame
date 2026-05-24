@@ -65,7 +65,6 @@ try {
     <form action="" method="POST">
         <input type="hidden" name="id" value="<?= $game['id'] ?? ''; ?>" />
         <input type="hidden" name="action" value="<?= $isUpdate ? 'update' : 'create'; ?>" />
-        <input type="hidden" name="game_key" id="game_key" value="<?= $game['game_key'] ?? ''; ?>" />
 
         <div class="upsert-datas-container">
             <img id="game_image_preview" src="<?= $game['image'] ?? DEFAULT_IMAGE; ?>" data-default="<?= DEFAULT_IMAGE; ?>" alt="Game cover" draggable="false" onerror="handleErrorImage(event, this)" />
@@ -73,13 +72,17 @@ try {
             <div class="">
                 <label class="label">
                     <span class="label">Nombre de juego</span>
-                    <input type="text" id="game_name" name="game_name" value="<?= $game['game_name'] ?? ''; ?>" required>
+                    <input type="text" id="game_name" name="name" value="<?= $game['name'] ?? ''; ?>" required>
                 </label>
-
 
                 <label class="label">
                     <span class="label">Image</span>
                     <input type="text" name="image" value="<?= $game['image'] ?? ''; ?>" required onchange="handleImageChange(event, this)">
+                </label>
+
+                <label class="label">
+                    <span class="label">Generación</span>
+                    <input type="number" name="generation" value="<?= $game['generation'] ?? ''; ?>" inputmode="numeric" required>
                 </label>
             </div>
         </div>
@@ -88,8 +91,8 @@ try {
             <?php foreach ($games as $gameOption): ?>
                 <label class="label radio-label">
                     <input type="radio"
-                        name="game_version"
-                        value="<?= $gameOption; ?>" <?= (isset($game['game_version']) && $game['game_version'] === $gameOption) ? 'checked' : ''; ?>
+                        name="version"
+                        value="<?= $gameOption; ?>" <?= (isset($game['version']) && $game['version'] === $gameOption) ? 'checked' : ''; ?>
                         onchange="handleGameVersionChange(event, this)"
                         required
                     />

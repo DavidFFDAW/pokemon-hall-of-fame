@@ -6,11 +6,6 @@ class Games
     private Database $database;
 
 	private $table = 'games';
-	private $required = [
-		'game_key',
-		'game_name',
-		'player_name'
-	];
 
 	public function __construct()
 	{
@@ -19,17 +14,9 @@ class Games
 		$this->pdo = $instance->getConnection();
 	}
 
-	public function checkRequiredFields(array $data): bool
-	{
-		foreach ($this->required as $field) {
-			if (empty($data[$field])) throw new Exception("El campo '$field' es obligatorio.");
-		}
-		return true;
-	}
-
 	public function getGames(): array
 	{
-		$games = $this->pdo->query('SELECT * FROM ' . $this->table . ' ORDER BY name DESC');
+		$games = $this->pdo->query('SELECT * FROM ' . $this->table . ' ORDER BY generation ASC');
 		if (!$games) return [];
 		return $games->fetchAll(PDO::FETCH_ASSOC);
 	}
@@ -44,55 +31,27 @@ class Games
 
 	public function create(array $data): bool
 	{
-		$this->checkRequiredFields($data);
-
+        $keys = array_keys($data);
 		$stmt = $this->pdo->prepare('
-			INSERT INTO ' . $this->table . ' (game_key, game_name, player_name, region, championed_at, created_at) 
-			VALUES (:game_key, :game_name, :player_name, :region, :championed_at, :created_at)
+			INSERT INTO ' . $this->table . ' (' . implode(', ', $keys) . ') VALUES 
+            (:' . implode(', :', $keys) . ')
 		');
 
-		return $stmt->execute([
-			'game_key' => $data['game_key'],
-			'game_name' => $data['game_name'],
-			'player_name' => $data['player_name'],
-			'region' => $data['region'] ?? null,
-			'championed_at' => !empty($data['championed_at']) ? date('Y-m-d H:i:s', strtotime($data['championed_at'])) : null,
-			'created_at' => date('Y-m-d H:i:s')
-		]);
+		return $stmt->execute($data);
 	}
-	public function update(array $data): bool
-	{
-		$this->checkRequiredFields($data);
 
+	public function update(array $data, int $id): bool
+	{
+        $setClause = implode(', ', array_map(fn($key) => $key . ' = :' . $key, array_keys($data)));
 		$stmt = $this->pdo->prepare('
-				UPDATE ' . $this->table . ' SET 
-					game_key = :game_key, 
-					game_name = :game_name, 
-					player_name = :player_name,
-					region = :region,
-					championed_at = :championed_at
-				WHERE id = :id
+				UPDATE ' . $this->table . ' SET ' . $setClause . ' WHERE id = :update_id
 			');
-		return $stmt->execute([
-			'id' => $data['id'],
-			'game_key' => $data['game_key'],
-			'game_name' => $data['game_name'],
-			'player_name' => $data['player_name'],
-			'region' => $data['region'] ?? null,
-			'championed_at' => !empty($data['championed_at']) ? date('Y-m-d H:i:s', strtotime($data['championed_at'])) : null
-		]);
+		return $stmt->execute(array_merge($data, ['update_id' => $id]));
 	}
 
-	public function upsert(array $data): bool
-	{
-		$this->checkRequiredFields($data);
-
-		if ((!isset($data['id']) || empty($data['id'])) && $data['action'] === 'create')
-			return $this->create($data);
-
-		if ($data['action'] === 'update')
-			return $this->update($data);
-
-		throw new Exception('Acción no válida para upsert: ' . ($data['action'] ?? 'null'));
-	}
+    public function deleteById(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->table . ' WHERE id = :id');
+        return $stmt->execute(['id' => $id]);
+    }
 }
