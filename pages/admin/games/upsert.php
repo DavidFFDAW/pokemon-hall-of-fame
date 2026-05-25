@@ -4,7 +4,7 @@ $gamesModel = new Games();
 $games = PokeApi::getGames();
 
 $game = null;
-if ($id) $game = $gamesModel->getGameById($id);
+if ($id) $game = $gamesModel->find((int) $id);
 $isUpdate = boolval($id) && $id !== 0 && ($game['id'] ?? null);
 
 try {
@@ -63,7 +63,7 @@ try {
     <h2><?= $game ? 'Editar juego' : 'Agregar nuevo juego'; ?></h2>
 
     <form action="" method="POST">
-        <input type="hidden" name="id" value="<?= $game['id'] ?? ''; ?>" />
+        <input type="hidden" name="update_id" value="<?= $game['id'] ?? ''; ?>" />
         <input type="hidden" name="action" value="<?= $isUpdate ? 'update' : 'create'; ?>" />
 
         <div class="upsert-datas-container">

@@ -48,6 +48,5 @@ try {
 
     render_template($template, $layout);
 } catch (Error $e) {
-    http_response_code(500);
-    echo 'An error occurred: ' . $e->getMessage() . ' (Code: ' . $e->getCode() . ')';
+    Flash::add($e->getMessage(), 'error');
 }

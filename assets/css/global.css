@@ -1,3 +1,5 @@
+@import './typographies.css';
+
 :root {
 	--type-color: #333;
 }
@@ -138,6 +140,19 @@ button,
 	box-shadow: 0 0 6px rgba(40, 167, 69, 0.3);
 }
 
+.capitalize {
+	text-transform: capitalize;
+}
+.uppercase {
+	text-transform: uppercase;
+}
+.lowercase {
+	text-transform: lowercase;
+}
+.tcenter {
+	text-align: center;
+}
+
 .overflowable-table {
 	overflow-x: auto;
 }
@@ -266,4 +281,18 @@ table th {
 	background-color: #e18ce1;
 	--type-color: #e18ce1;
 	color: #fff;
+}
+
+/* style the scroll bar */
+::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	border-radius: 50px;
+}
+::-webkit-scrollbar-thumb {
+	background: #ccc;
+	border-radius: 50px;
 }

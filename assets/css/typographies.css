@@ -1,0 +1,41 @@
+@font-face {
+	font-family: 'modern';
+	src: url('../fonts/modern.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'primetime';
+	src: url('../fonts/primetime.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'korataki';
+	src: url('../fonts/korataki.otf') format('opentype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'micrograma';
+	src: url('../fonts/micrograma.otf') format('opentype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+.modern {
+	font-family: 'modern', sans-serif;
+}
+.primetime {
+	font-family: 'primetime', serif;
+	letter-spacing: 0.05em;
+}
+.korataki {
+	font-family: 'korataki', serif;
+}
+.micrograma {
+	font-family: 'micrograma', serif;
+}

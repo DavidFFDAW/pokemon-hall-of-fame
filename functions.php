@@ -4,10 +4,35 @@ defined('DEFAULT_TEMPLATE') || define('DEFAULT_TEMPLATE', 'home');
 defined('NOT_FOUND_TEMPLATE') || define('NOT_FOUND_TEMPLATE', '404');
 defined('DEFAULT_LAYOUT') || define('DEFAULT_LAYOUT', 'main');
 defined('ADMIN_LAYOUT') || define('ADMIN_LAYOUT', 'admin');
+define('TYPE_MAP', [
+	'normal' => 'normal',
+	'fire' => 'fuego',
+	'water' => 'agua',
+	'electric' => 'eléctrico',
+	'grass' => 'planta',
+	'ice' => 'hielo',
+	'fighting' => 'lucha',
+	'poison' => 'veneno',
+	'ground' => 'tierra',
+	'flying' => 'volador',
+	'psychic' => 'psíquico',
+	'bug' => 'bicho',
+	'rock' => 'roca',
+	'ghost' => 'fantasma',
+	'dragon' => 'dragón',
+	'dark' => 'siniestro',
+	'steel' => 'acero',
+	'fairy' => 'hada',
+]);
 
 function e(string $string): string
 {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}
+
+function get_poke_type (string $type): string
+{
+	return TYPE_MAP[$type] ?? $type;
 }
 
 function get_request_path(): string

@@ -1,6 +1,6 @@
 <?php
-$games = new Games();
-$list = $games->get("ORDER BY generation ASC");
+$leagues = new Leagues();
+$list = $leagues->getLeagues();
 ?>
 
 <style>
@@ -91,9 +91,9 @@ $list = $games->get("ORDER BY generation ASC");
 </style>
 
 <div class="admin-panel-games-page">
-	<h1 class="primetime uppercase tcenter">Juegos registrados</h1>
+	<h1 class="primetime uppercase tcenter">Partidas registradas</h1>
 
-    <div class="games-container">
+    <div class="games-container"> 
         <?php foreach ($list as $game): ?>
             <div class="game-card">
                 <span class="badge badge-generation">G<?= $game['generation']; ?></span>
@@ -113,5 +113,5 @@ $list = $games->get("ORDER BY generation ASC");
         <?php endforeach; ?>
     </div>
 
-    <a href="<?= PATHNAME; ?>/upsert" class="btn btn-fixed-create" aria-label="Agregar nuevo juego">Agregar nuevo juego</a>
+    <a href="<?= PATHNAME; ?>/upsert" class="btn btn-fixed-create" aria-label="Agregar nueva partida">Agregar nueva partida</a>
 </div>
