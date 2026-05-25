@@ -47,6 +47,6 @@ try {
     $layout = layout_for_template($template);
 
     render_template($template, $layout);
-} catch (Error $e) {
+} catch (Throwable $e) {
     Flash::add($e->getMessage(), 'error');
 }

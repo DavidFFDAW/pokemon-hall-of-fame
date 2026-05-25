@@ -17,19 +17,15 @@ $savedPokemon = null;
 if ($id) $savedPokemon = $pokemonsModel->getPokemonById($id);
 $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 
-try {
-	if (is_post_request()) {
-		$upserted = $pokemonsModel->upsert(
-			$_POST,
-			$savedPokemon
-		);
-		if ($upserted) {
-			Flash::add('Pokémon guardado exitosamente.', 'success');
-			redirect('/admin/pokemons');
-		}
+if (is_post_request()) {
+	$upserted = $pokemonsModel->upsert(
+		$_POST,
+		$savedPokemon
+	);
+	if ($upserted) {
+		Flash::add('Pokémon guardado exitosamente.', 'success');
+		redirect('/admin/pokemons');
 	}
-} catch (Exception $e) {
-	Flash::add('Error al guardar el Pokémon: ' . $e->getMessage(), 'error');
 }
 ?>
 

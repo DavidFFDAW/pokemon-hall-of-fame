@@ -9,14 +9,10 @@ $league = null;
 if ($id) $league = $leaguesModel->find((int) $id);
 $isUpdate = boolval($id) && $id !== 0 && ($league['id'] ?? null);
 
-try {
-    if (is_post_request()) {
-        $post = new PostController();
-        $post->upsertLeague();
-        redirect('/admin/leagues');
-    }
-} catch (Exception $e) {
-    Flash::add('Error al guardar la partida: ' . $e->getMessage(), 'error');
+if (is_post_request()) {
+    $post = new PostController();
+    $post->upsertLeague();
+    redirect('/admin/leagues');
 }
 ?>
 

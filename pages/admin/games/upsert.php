@@ -7,14 +7,10 @@ $game = null;
 if ($id) $game = $gamesModel->find((int) $id);
 $isUpdate = boolval($id) && $id !== 0 && ($game['id'] ?? null);
 
-try {
-    if (is_post_request()) {
-        $post = new PostController();
-        $post->upsertGame();
-        redirect('/admin/games');
-    }
-} catch (Exception $e) {
-    Flash::add('Error al guardar el juego: ' . $e->getMessage(), 'error');
+if (is_post_request()) {
+    $post = new PostController();
+    $post->upsertGame();
+    redirect('/admin/games');
 }
 ?>
 

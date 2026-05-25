@@ -113,7 +113,22 @@ function render_template(string $template, string $layout = DEFAULT_LAYOUT): voi
     }
 
     ob_start();
-    require $path;
+    try {
+        require $path;
+    } catch (Throwable $e) {
+        ob_end_clean();
+        Flash::add('Error: ' . $e->getMessage(), 'error');
+
+        $previousMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+
+        ob_start();
+        try {
+            require $path;
+        } finally {
+            $_SERVER['REQUEST_METHOD'] = $previousMethod;
+        }
+    }
     $content = ob_get_clean();
 
     if ($layout === false || $layout === null) {
