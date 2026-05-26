@@ -56,8 +56,8 @@ class PostController
 
 		$datas = array(
 			'game_id' => $_POST['game_id'] ?? null,
-			// 'trainer_name' => $_POST['trainer_name'] ?? '',
-			// 'location' => $_POST['location'] ?? '',
+			'trainer_name' => $_POST['trainer_name'] ?? '',
+			'location' => $_POST['location'] ?? '',
 			'date' => $_POST['date'] ?? null,
 		);
 

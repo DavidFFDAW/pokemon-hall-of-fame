@@ -56,7 +56,7 @@ if (is_post_request()) {
 </style>
 
 <div class="box">
-    <h2><?= $game ? 'Editar juego' : 'Agregar nuevo juego'; ?></h2>
+    <h1 class="panel-title"><?= $game ? 'Editar juego' : 'Agregar nuevo juego'; ?></h1>
 
     <form action="" method="POST">
         <input type="hidden" name="update_id" value="<?= $game['id'] ?? ''; ?>" />

@@ -1,11 +1,11 @@
 <?php
 
 $id = $_GET['id'] ?? null;
-$gamesModel = new Games();
-if (!isset($id) || !$id || !is_numeric($id)) Flash::add('ID de juego no válido.', 'error');
+$leaguesModel = new Leagues();
+if (!isset($id) || !$id || !is_numeric($id)) Flash::add('ID de liga no válido.', 'error');
 
-$deleted = $gamesModel->delete((int) $id);
-if (!$deleted) Flash::add('Ocurrió un error al eliminar el juego. Inténtalo de nuevo.', 'error');
+$deleted = $leaguesModel->delete((int) $id);
+if (!$deleted) Flash::add('Ocurrió un error al eliminar la liga. Inténtalo de nuevo.', 'error');
 
-Flash::add('Juego eliminado exitosamente.', 'success');
-redirect('/admin/games');
+Flash::add('Liga eliminada exitosamente.', 'success');
+redirect('/admin/leagues');

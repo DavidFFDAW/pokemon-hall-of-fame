@@ -96,18 +96,18 @@ $list = $leagues->getLeagues();
     <div class="games-container"> 
         <?php foreach ($list as $game): ?>
             <div class="game-card">
-                <span class="badge badge-generation">G<?= $game['generation']; ?></span>
-                <img src="<?= $game['image']; ?>" alt="<?= $game['name']; ?> image" class="game-image">
+                <!-- <span class="badge badge-generation">G<?= $game['generation']; ?></span> -->
+                <img src="<?= $game['game_image']; ?>" alt="<?= $game['game_name']; ?> image" class="game-image">
                 <div class="game-card-text-content">
-                    <h3 class="micrograma underline"><?= $game['name']; ?></h3>
-                    <small><?= $game['version_group']; ?></small>
-                    <a href="<?= PATHNAME; ?>/upsert?id=<?= $game['id']; ?>" class="btn btn-update" aria-label="Editar juego <?= $game['name']; ?>">Editar</a>
+                    <h3 class="micrograma underline"><?= $game['trainer_name']; ?></h3>
+                    <small><?= $game['game_name']; ?></small>
+                    <a href="<?= PATHNAME; ?>/upsert?id=<?= $game['id']; ?>" class="btn btn-update" aria-label="Editar juego <?= $game['game_name']; ?>">Editar</a>
                 </div>
 
                 <a href="<?= PATHNAME; ?>/delete?id=<?= $game['id']; ?>" 
                     class="btn btn-delete" 
                     aria-label="Eliminar juego <?= $game['name']; ?>"
-                    onclick="return confirm('¿Estás seguro de que deseas eliminar el juego <?= $game['name']; ?>? Esta acción no se puede deshacer.');"
+                    onclick="handleConfirm(event, '¿Estás seguro de que deseas eliminar esta partida? Esta acción no se puede deshacer.')"
                 >x</a>
             </div>
         <?php endforeach; ?>
@@ -115,3 +115,9 @@ $list = $leagues->getLeagues();
 
     <a href="<?= PATHNAME; ?>/upsert" class="btn btn-fixed-create" aria-label="Agregar nueva partida">Agregar nueva partida</a>
 </div>
+
+<script>
+function handleConfirm(event, message) {
+	if (!confirm(message)) event.preventDefault();
+}
+</script>

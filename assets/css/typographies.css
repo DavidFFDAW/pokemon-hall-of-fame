@@ -26,16 +26,36 @@
 	font-style: normal;
 }
 
+@font-face {
+	font-family: 'floral';
+	src: url('../fonts/floral.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'violet';
+	src: url('../fonts/sony-sketch.ttf') format('truetype');
+	font-weight: 400;
+	font-style: normal;
+}
+
 .modern {
 	font-family: 'modern', sans-serif;
 }
 .primetime {
-	font-family: 'primetime', serif;
+	font-family: 'primetime', sans-serif;
 	letter-spacing: 0.05em;
 }
 .korataki {
-	font-family: 'korataki', serif;
+	font-family: 'korataki', sans-serif;
 }
 .micrograma {
-	font-family: 'micrograma', serif;
+	font-family: 'micrograma', sans-serif;
+}
+.floral {
+	font-family: 'floral', sans-serif;
+}
+.violet {
+	font-family: 'violet', sans-serif;
 }
