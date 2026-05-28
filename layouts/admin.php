@@ -7,8 +7,9 @@
     <meta name="robots" content="<?= e($robots ?? 'noindex,nofollow') ?>">
     <meta name="description" content="<?= e($description ?? 'Administracion de Poke Fame') ?>">
     <title><?= e($title ?? 'Admin | Poke Fame') ?></title>
-    <link rel="stylesheet" href="<?= CSS_URI ?>/global.css">
-    <link rel="stylesheet" href="<?= CSS_URI ?>/admin.css">
+    <link rel="stylesheet" href="<?= CSS_URI ?>/global.css" />
+    <link rel="stylesheet" href="<?= CSS_URI ?>/admin.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
 </head>
 
 <body>
@@ -21,7 +22,6 @@
                 <li><a href="<?= BASE_URI ?>admin/users/list">Usuarios</a></li>
                 <li><a href="<?= BASE_URI ?>admin/games">Juegos</a></li>
                 <li><a href="<?= BASE_URI ?>admin/pokemons">Pokémons</a></li>
-                <li><a href="<?= BASE_URI ?>admin/editor">SQL</a></li>
                 <!-- Add more admin links as needed -->
             </ul>
         </nav>
@@ -36,24 +36,14 @@
             <?php endforeach; ?>
         </ul>
 
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+		</div>
+
         <?= $content ?>
     </main>
 
-
-    <script type="text/javascript">
-        const flashMessages = document.querySelectorAll('ul.flash-messages li.flash-message');
-
-        function onFlashAnimationEnd(event) {
-            const flash = event.target;
-            if (event.animationName !== 'fadeOut') return;
-            flash.removeEventListener('animationend', onFlashAnimationEnd);
-            flash.remove();
-        }
-
-        for (const flash of flashMessages) {
-            flash.addEventListener('animationend', onFlashAnimationEnd);
-        }
-    </script>
+	<script type="text/javascript" src="<?= JS_URI ?>/global.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,17 @@
 <?php
-$database = Database::getInstance();
-$pokemons = $database->getGamesWithPokemons();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+$league = new Leagues();
+if (!isset($_GET['id']) || !is_numeric($_GET['id']) || empty($_GET['id']))
+	redirect('/admin/leagues');
+
+$league = $league->getLeague((int) $_GET['id']);
+// $pokemons = new Pokemons();
+// $list = $pokemons->get('WHERE game_id = ' . $game['game_id'] . ' ORDER BY level DESC');
+$apimons = PokeApi::getPokemons();
+
 ?>
 
 <style>
@@ -86,34 +97,34 @@ $pokemons = $database->getGamesWithPokemons();
 		text-decoration: none;
 		font-size: 14px;
 	}
+
+	.slider {
+		aspect-ratio: 16 / 9;
+		width: 300px;
+		position: relative;
+		display: flex;
+		overflow: scroll;
+		scroll-snap-type: x mandatory;
+	}
+	.slider > img {
+		width: 100%;
+		position: sticky;
+		left: 0;
+		scroll-snap-align: center;
+	}
 </style>
 
 <div class="games-container">
-	<?php foreach ($pokemons as $game): ?>
-		<div class="game game-box game-card">
-			<h2><?= $game['game_name']; ?></h2>
-			<small><?= $game['player_name']; ?></small>
-			<small><?= $game['region']; ?></small>
-
-			<div class="pokemons game-pokemons-container">
-				<?php foreach ($game['pokemons'] as $pokemon): ?>
-					<div class="pokemon-card">
-						<img src="<?= $pokemon['image']; ?>" alt="<?= $pokemon['name']; ?>" class="pokemon-sprite" />
-						<div class="pokemon-info">
-							<h3><?= $pokemon['nickname']; ?></h3>
-							<p>Nivel: <?= $pokemon['level']; ?></p>
-						</div>
-						<div class="actions-container">
-							<a href="<?= PATHNAME; ?>/delete?id=<?= $pokemon['id']; ?>" class="delete" aria-label="Eliminar pokémon" onclick="return confirm('¿Estás seguro de que deseas eliminar este pokémon?')">×</a>
-							<a href="<?= PATHNAME; ?>/upsert?id=<?= $pokemon['id']; ?>&game_id=<?= $game['id']; ?>" class="edit" aria-label="Editar pokémon">✎</a>
-							<a href="<?= PATHNAME; ?>/moves?pokemon_id=<?= $pokemon['id']; ?>&game_id=<?= $game['id']; ?>" class="edit" aria-label="Editar movimientos">⚡</a>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	<?php endforeach; ?>
-
+	<div class="slider">
+		<?php foreach (array_slice($apimons, 0, 50) as $pokemon): ?>
+			<img 
+				draggable="false"
+				class="pokemon-card"
+				src="<?= $pokemon['image'] ?>"
+				alt="<?= e($pokemon['name']) ?>"
+			/>
+		<?php endforeach; ?>
+	</div>
 
 	<a href="<?= PATHNAME; ?>/upsert" class="btn create-button" aria-label="Agregar nuevo pokémon">Agregar nuevo pokémon</a>
 </div>

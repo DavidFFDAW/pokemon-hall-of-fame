@@ -1,35 +1,27 @@
 <?php
 $id = $_GET['id'] ?? null;
-if (!isset($_GET['game_id'])) {
-	Flash::add('ID de juego no proporcionado para asignar al pokémon.', 'error');
-	redirect('/admin/pokemons');
-}
+$leaguesModel = new Leagues();
+$pokemonsModel = new Pokemons();
+$leagues = $leaguesModel->getLeagues();
+// debug($leagues);
 $pokemons = PokeApi::getPokemons();
-$database = Database::getInstance();
-$pokemonsModel = new Pokemon($database);
-$pokemonsInGame = $pokemonsModel->getHowManyPokemonsByGameId($_GET['game_id']);
-if ($pokemonsInGame >= 6) {
-	Flash::add('El juego seleccionado ya tiene 6 pokémons asignados. No se pueden asignar más.', 'error');
-	redirect('/admin/pokemons');
-}
 
 $savedPokemon = null;
-if ($id) $savedPokemon = $pokemonsModel->getPokemonById($id);
+if ($id) $savedPokemon = $pokemonsModel->find($id);
 $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 
-if (is_post_request()) {
-	$upserted = $pokemonsModel->upsert(
-		$_POST,
-		$savedPokemon
-	);
-	if ($upserted) {
-		Flash::add('Pokémon guardado exitosamente.', 'success');
-		redirect('/admin/pokemons');
-	}
-}
+// if (is_post_request()) {}
 ?>
 
 <style>
+	body main {
+		padding: 0 20px;
+	}
+	.box {
+		max-height: calc(100dvh - 54px);
+		min-height: calc(100dvh - 54px);
+		border-radius: 0;
+	}
 	.game-version-container {
 		display: flex;
 		flex-wrap: wrap;
@@ -88,21 +80,32 @@ if (is_post_request()) {
 		gap: 5px;
 		text-transform: capitalize;
 	}
+	.pokemon-container .pokemon-list-container label .label span {
+		font-family: 'floral', sans-serif;
+		font-weight: 400;
+		font-size: 0.9em;
+	}
 	.pokemon-container .pokemon-list-container label img {
 		width: 60px;
 		height: auto;
 		object-fit: contain;
 	}
+	
+	.pokemon-gender-container {
+		display: flex;
+		gap: 15px;
+	}
 
 </style>
 
 <div class="box">
-	<h2><?= $savedPokemon ? 'Editar pokemon' : 'Agregar nuevo pokemon'; ?></h2>
+	<h1 class="panel-title"><?= $savedPokemon ? 'Editar pokemon' : 'Agregar nuevo pokemon'; ?></h1>
 
-	<form action="" method="POST">
+	<form action="" method="POST" class="pokemon-upsert-step-checkout">
 		<input type="hidden" name="id" value="<?= $savedPokemon['id'] ?? ''; ?>" />
 		<input type="hidden" name="action" value="<?= $isUpdate ? 'update' : 'create'; ?>" />
-		<input type="hidden" name="game_id" id="game_id" value="<?= $savedPokemon['game_id'] ?? $_GET['game_id'] ?? ''; ?>" />
+		<input type="hidden" name="update_id" value="<?= $savedPokemon['id'] ?? ''; ?>" />
+		<input type="hidden" id="step" name="step" value="1" />
 
 		<div class="pokemon-container">
 			<div class="pokemon-searcher">
@@ -115,7 +118,7 @@ if (is_post_request()) {
 							name="pokemon_id"
 							value="<?= $pokemon['id']; ?>"
 							<?= (isset($savedPokemon['name']) && $savedPokemon['name'] === $pokemon['name']) ? 'checked' : ''; ?>
-							onchange="handleGameVersionChange(event, this)"
+							onchange="handlePokemonChange(event, this)"
 						/>
 						<div class="label">
 							<img
@@ -124,7 +127,9 @@ if (is_post_request()) {
 								loading="lazy" decoding="async" 
 								draggable="false" 
 							/>
-							<?= $pokemon['name']; ?>
+							<span>
+								<?= $pokemon['name']; ?>
+							</span>
 						</div>
 					</label>
 				<?php endforeach; ?>
@@ -141,16 +146,49 @@ if (is_post_request()) {
                 <span class="label">Nivel</span>
                 <input type="number" id="level" name="level" value="<?= $savedPokemon['level'] ?? ''; ?>">
             </label>
-		</div>
 
-		
+			<label class="label">
+                <span class="label">Item</span>
+                <input type="text" id="item" name="item" value="<?= $savedPokemon['item'] ?? ''; ?>">
+            </label>
+
+			<label class="label">
+                <span class="label">Habilidad</span>
+				<input type="text" id="ability" name="ability" value="<?= $savedPokemon['ability'] ?? ''; ?>">
+            </label>
+
+			<label class="label">
+                <span class="label">Genus</span>
+				<input type="text" id="genus" name="genus" value="<?= $savedPokemon['genus'] ?? ''; ?>">
+            </label>
+
+			<div class="pokemon-gender-container">
+				<label class="label radio-label">
+					<input type="radio" name="gender" value="m"/>
+					<div class="label">
+						<i class="bi bi-gender-male"></i>
+						<span>Masculino</span>
+					</div>
+				</label>
+				<label class="label radio-label">
+					<input type="radio" name="gender" value="f"/>
+					<div class="label">
+						<i class="bi bi-gender-female"></i>
+						<span>Femenino</span>
+					</div>
+				</label>
+			</div>
+		</div>
 
 		<button type="submit" class="btn"><?= $isUpdate ? 'Actualizar' : 'Crear'; ?></button>
 	</form>
 </div>
 
 <script type="text/javascript">
-	const gameId = <?= json_encode($_GET['game_id'] ?? null); ?>;
+	const isUpdate = Boolean(<?= $isUpdate ? 1 : 0; ?>);
+	let currentStep = isUpdate ? 3 : 1;
+
+	const leagueId = <?= json_encode($_GET['league_id'] ?? null); ?>;
 	const savedPokemon = <?= json_encode($savedPokemon ?? null); ?>;
 	const $pokemonLabels = Array.from(document.querySelectorAll(`.pokemon-list-container label`)).map(label => {
 		return {
@@ -158,6 +196,14 @@ if (is_post_request()) {
 			name: label.getAttribute('data-pokemon-name')
 		}
 	});
+
+	function handlePokemonChange(event, input) {
+		if (input.checked) {
+			const selectedLabel = input.closest('label');
+			const pokemonName = selectedLabel.getAttribute('data-pokemon-name');
+			scrollToPokemonByName(pokemonName);
+		}
+	}
 
 
 	function scrollToPokemonByName(name) {

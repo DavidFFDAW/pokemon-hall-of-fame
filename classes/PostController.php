@@ -73,4 +73,25 @@ class PostController
 			$upserted ? 'success' : 'error'
 		);
 	}
+
+	public function upsertPokemon() {
+		$isUpdate = $this->isUpdate();
+		
+		$upsertDatas = array(
+			'api_id' => '',
+			'league_id' => '',
+			'species' => '',
+			'is_shiny' => '',
+			'level' => '',
+			'nickname' => '',
+			'gender' => '',
+			'ability' => '',
+			'item' => '',
+			'types' => '',
+			'genus' => '',
+			'region' => '',
+		);
+		$requiredFields = ['api_id', 'league_id', 'species', 'level', 'nickname', 'types'];
+		$this->checkForFields($requiredFields, $upsertDatas);
+	}
 }

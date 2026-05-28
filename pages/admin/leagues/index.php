@@ -102,12 +102,13 @@ $list = $leagues->getLeagues();
                     <h3 class="micrograma underline"><?= $game['trainer_name']; ?></h3>
                     <small><?= $game['game_name']; ?></small>
                     <a href="<?= PATHNAME; ?>/upsert?id=<?= $game['id']; ?>" class="btn btn-update" aria-label="Editar juego <?= $game['game_name']; ?>">Editar</a>
+					<a href="/admin/pokemons?id=<?= $game['id']; ?>" class="btn" aria-label="Ver pokemons de la partida <?= $game['game_name']; ?>">Ver pokemons</a>
                 </div>
 
                 <a href="<?= PATHNAME; ?>/delete?id=<?= $game['id']; ?>" 
                     class="btn btn-delete" 
-                    aria-label="Eliminar juego <?= $game['name']; ?>"
-                    onclick="handleConfirm(event, '¿Estás seguro de que deseas eliminar esta partida? Esta acción no se puede deshacer.')"
+                    aria-label="Eliminar juego <?= $game['game_name']; ?>"
+					data-confirm="¿Estás seguro de que deseas eliminar esta partida? Esta acción no se puede deshacer."
                 >x</a>
             </div>
         <?php endforeach; ?>
@@ -115,9 +116,3 @@ $list = $leagues->getLeagues();
 
     <a href="<?= PATHNAME; ?>/upsert" class="btn btn-fixed-create" aria-label="Agregar nueva partida">Agregar nueva partida</a>
 </div>
-
-<script>
-function handleConfirm(event, message) {
-	if (!confirm(message)) event.preventDefault();
-}
-</script>

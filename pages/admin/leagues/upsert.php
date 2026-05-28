@@ -129,7 +129,11 @@ if (is_post_request()) {
 		</div>
 
 		<div class="form-buttons-container">
-			<button type="submit" class="btn btn-submit"><?= $isUpdate ? 'Actualizar' : 'Crear'; ?></button>
+			<button type="submit" 
+				class="btn btn-submit"
+			>
+				<?= $isUpdate ? 'Actualizar' : 'Crear'; ?>
+			</button>
 		</div>
 	</form>
 </div>

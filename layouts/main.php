@@ -11,8 +11,14 @@
 
 <body>
     <main class="main-content">
+		<div class="loading-container">
+			<div class="loading-spinner"></div>
+		</div>
+		
         <?= $content ?>
     </main>
+
+	<script type="text/javascript" src="<?= JS_URI ?>/global.js"></script>
 </body>
 
 </html>

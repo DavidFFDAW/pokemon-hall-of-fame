@@ -63,12 +63,16 @@ class PokeApi {
 	}
 
     public static function getApiData(string $endpoint, bool $fullURL = false) {
-        $url = $fullURL ? $endpoint : self::$baseUrl . trim($endpoint, '/');
+		$url = $fullURL ? $endpoint : self::$baseUrl . trim($endpoint, '/');
         $data = self::fetchData($url);
         if (!$data) return null;
         return $data;
-    }
-
+	}
+	
+	public static function fetch(string $endpoint, bool $fullURL = false) {
+		return self::getApiData($endpoint, $fullURL);
+	}
+		
     private static function fetchData(string $url) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

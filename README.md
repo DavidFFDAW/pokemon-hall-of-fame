@@ -30,6 +30,7 @@ Simple web app to register the different pokemon teams I completed the different
     - types
     - genus
     - region
+	- shiny (boolean)
 
 - Moves:
     - pokemon_id (foreign key)
