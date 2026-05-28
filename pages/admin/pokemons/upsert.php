@@ -17,11 +17,13 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 	body main {
 		padding: 0 20px;
 	}
+
 	.box {
 		max-height: calc(100dvh - 54px);
 		min-height: calc(100dvh - 54px);
 		border-radius: 0;
 	}
+
 	.game-version-container {
 		display: flex;
 		flex-wrap: wrap;
@@ -54,6 +56,7 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		overflow: hidden;
 		gap: 0;
 	}
+
 	.pokemon-container .pokemon-searcher input {
 		width: 100%;
 		padding: 8px;
@@ -61,6 +64,7 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		border-bottom: 1px solid #ccc;
 		border-radius: 8px 8px 0 0;
 	}
+
 	.pokemon-container .pokemon-list-container {
 		max-width: 100%;
 		display: flex;
@@ -69,10 +73,12 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		overflow-x: auto;
 		gap: 10px;
 	}
+
 	.pokemon-container .pokemon-list-container label {
 		flex: 0 0 auto;
 		min-width: 100px;
 	}
+
 	.pokemon-container .pokemon-list-container label .label {
 		display: flex;
 		flex-direction: column;
@@ -80,22 +86,51 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		gap: 5px;
 		text-transform: capitalize;
 	}
+
 	.pokemon-container .pokemon-list-container label .label span {
 		font-family: 'floral', sans-serif;
 		font-weight: 400;
 		font-size: 0.9em;
 	}
+
 	.pokemon-container .pokemon-list-container label img {
 		width: 60px;
 		height: auto;
 		object-fit: contain;
 	}
-	
+
 	.pokemon-gender-container {
 		display: flex;
 		gap: 15px;
 	}
 
+	.form-step-button-container {
+		position: fixed;
+		bottom: 0;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		max-width: calc(800px - 60px);
+		border-radius: 12px 12px 0 0;
+		border: 1px solid #ccc;
+		border-bottom: none;
+		margin: 0 auto;
+		padding: 10px;
+		background-color: #fff;
+		border-top: 1px solid #ccc;
+
+		display: flex;
+		justify-content: flex-end;
+	}
+
+	.form-step-button-container button {
+		padding: 8px 15px;
+		border: none;
+		background-color: #007bff;
+		color: #fff;
+		border-radius: 5px;
+		cursor: pointer;
+	}
 </style>
 
 <div class="box">
@@ -106,6 +141,18 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		<input type="hidden" name="action" value="<?= $isUpdate ? 'update' : 'create'; ?>" />
 		<input type="hidden" name="update_id" value="<?= $savedPokemon['id'] ?? ''; ?>" />
 		<input type="hidden" id="step" name="step" value="1" />
+
+		<div class="form-steps-container"></div>
+
+		<div class="form-step-button-container">
+			<button
+				class="btn"
+				type="submit"
+				onclick="handleStepButtonClick(event, this)"
+			>
+				Siguiente
+			</button>
+		</div>
 
 		<div class="pokemon-container">
 			<div class="pokemon-searcher">
@@ -118,15 +165,13 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 							name="pokemon_id"
 							value="<?= $pokemon['id']; ?>"
 							<?= (isset($savedPokemon['name']) && $savedPokemon['name'] === $pokemon['name']) ? 'checked' : ''; ?>
-							onchange="handlePokemonChange(event, this)"
-						/>
+							onchange="handlePokemonChange(event, this)" />
 						<div class="label">
 							<img
-								src="<?= $pokemon['image']; ?>" 
-								alt="<?= $pokemon['name']; ?>" 
-								loading="lazy" decoding="async" 
-								draggable="false" 
-							/>
+								src="<?= $pokemon['image']; ?>"
+								alt="<?= $pokemon['name']; ?>"
+								loading="lazy" decoding="async"
+								draggable="false" />
 							<span>
 								<?= $pokemon['name']; ?>
 							</span>
@@ -138,40 +183,40 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 
 		<div class="upsert-datas-container">
 			<label class="label">
-                <span class="label">Mote</span>
-                <input type="text" id="nickname" name="nickname" value="<?= $savedPokemon['nickname'] ?? ''; ?>">
-            </label>
+				<span class="label">Mote</span>
+				<input type="text" id="nickname" name="nickname" value="<?= $savedPokemon['nickname'] ?? ''; ?>">
+			</label>
 
 			<label class="label">
-                <span class="label">Nivel</span>
-                <input type="number" id="level" name="level" value="<?= $savedPokemon['level'] ?? ''; ?>">
-            </label>
+				<span class="label">Nivel</span>
+				<input type="number" id="level" name="level" value="<?= $savedPokemon['level'] ?? ''; ?>">
+			</label>
 
 			<label class="label">
-                <span class="label">Item</span>
-                <input type="text" id="item" name="item" value="<?= $savedPokemon['item'] ?? ''; ?>">
-            </label>
+				<span class="label">Item</span>
+				<input type="text" id="item" name="item" value="<?= $savedPokemon['item'] ?? ''; ?>">
+			</label>
 
 			<label class="label">
-                <span class="label">Habilidad</span>
+				<span class="label">Habilidad</span>
 				<input type="text" id="ability" name="ability" value="<?= $savedPokemon['ability'] ?? ''; ?>">
-            </label>
+			</label>
 
 			<label class="label">
-                <span class="label">Genus</span>
+				<span class="label">Genus</span>
 				<input type="text" id="genus" name="genus" value="<?= $savedPokemon['genus'] ?? ''; ?>">
-            </label>
+			</label>
 
 			<div class="pokemon-gender-container">
 				<label class="label radio-label">
-					<input type="radio" name="gender" value="m"/>
+					<input type="radio" name="gender" value="m" />
 					<div class="label">
 						<i class="bi bi-gender-male"></i>
 						<span>Masculino</span>
 					</div>
 				</label>
 				<label class="label radio-label">
-					<input type="radio" name="gender" value="f"/>
+					<input type="radio" name="gender" value="f" />
 					<div class="label">
 						<i class="bi bi-gender-female"></i>
 						<span>Femenino</span>
@@ -179,23 +224,34 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 				</label>
 			</div>
 		</div>
-
-		<button type="submit" class="btn"><?= $isUpdate ? 'Actualizar' : 'Crear'; ?></button>
 	</form>
 </div>
 
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script type="text/javascript">
+	const lastStep = 3;
 	const isUpdate = Boolean(<?= $isUpdate ? 1 : 0; ?>);
 	let currentStep = isUpdate ? 3 : 1;
 
 	const leagueId = <?= json_encode($_GET['league_id'] ?? null); ?>;
 	const savedPokemon = <?= json_encode($savedPokemon ?? null); ?>;
+	const stepInpt = document.getElementById('step');
 	const $pokemonLabels = Array.from(document.querySelectorAll(`.pokemon-list-container label`)).map(label => {
 		return {
 			element: label,
 			name: label.getAttribute('data-pokemon-name')
 		}
 	});
+
+	function handleStepButtonClick(event, button) {
+		if (currentStep < lastStep) {
+			event.preventDefault();
+			currentStep = currentStep + 1;
+			stepInpt.value = currentStep;
+			button.textContent = currentStep === lastStep ? 'Guardar' : 'Siguiente';
+		}
+	}
 
 	function handlePokemonChange(event, input) {
 		if (input.checked) {
@@ -210,7 +266,10 @@ $isUpdate = boolval($id) && $id !== 0 && ($savedPokemon['id'] ?? null);
 		// const $pokemonLabel = document.querySelector(`.pokemon-list-container label[data-pokemon-name="${name.toLowerCase()}"]`);
 		// if ($pokemonLabel) $pokemonLabel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 		const pokemonData = $pokemonLabels.find(label => label.name.includes(name));
-		if (pokemonData) pokemonData.element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		if (pokemonData) pokemonData.element.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start'
+		});
 	}
 
 	function searchPokemons(event, input) {
