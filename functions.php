@@ -192,7 +192,7 @@ function redirect(string $url): void
     header('Location: ' . $url);
     exit;
 }
-function response(string $content, int $statusCode = 200): void
+function response(string $content, int $statusCode = 200, array $data = []): void
 {
 	$code = $statusCode >= 100 && $statusCode < 600 ? $statusCode : 200;
 	$resp = array(
@@ -200,6 +200,7 @@ function response(string $content, int $statusCode = 200): void
 		'message' => $content,
 		'error' => $code >= 300,
 		'success' => $code >= 200 && $code < 300,
+		'data' => $data
 	);
 	header('Content-Type: application/json');
 	http_response_code($code);

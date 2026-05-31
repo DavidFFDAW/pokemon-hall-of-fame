@@ -19,7 +19,9 @@ define('VIEWS_PATH', $directory . '/pages');
 define('LAYOUTS_PATH', $directory . '/layouts');
 define('STORAGE_PATH', $directory . '/storage');
 
+$isHttp = isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'http';
 define('BASE_URI', '/');
+define('BASE_HOST', ($isHttp ? 'http' : 'https') . '://' . $_SERVER['HTTP_HOST']);
 define('JS_URI', BASE_URI . 'assets/js');
 define('CSS_URI', BASE_URI . 'assets/css');
 define('CURRENT_URL', $_SERVER['REQUEST_URI']);

@@ -28,7 +28,7 @@ class PokeApi {
 		
 		foreach ($response as $pokemon) {
 			$pokeID = basename($pokemon['url'] ?? '');
-			$pokemons[] = [
+			$pokemons[$pokeID] = [
 				'id' => $pokeID,
 				'name' => $pokemon['name'] ?? 'Unknown',
 				'sprite' => 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' . ($pokeID ?? '0') . '.png',
@@ -61,6 +61,45 @@ class PokeApi {
 		if (!$pokemon) return [];
 		return $pokemon['moves'] ?? [];
 	}
+
+    public static function getLanguageFromLanguagesArray(array $languages, string $targetLanguage = 'es'): string {
+        foreach ($languages as $language) {
+            if (($language['language']['name'] ?? '') === $targetLanguage) {
+                return $language['name'] ?? 'unknown';
+            }
+        }
+        return 'unknown';
+    }
+
+    public static function getNatures(): array {
+        return array(
+            'hardy' => 'Fuerte',
+            'bold' => 'Osada',
+            'modest' => 'Modesta',
+            'calm' => 'Serena',
+            'timid' => 'Miedosa',
+            'lonely' => 'Huraña',
+            'docile' => 'Dócil',
+            'mild' => 'Afable',
+            'gentle' => 'Amable',
+            'hasty' => 'Activa',
+            'adamant' => 'Firme',
+            'impish' => 'Agitada',
+            'bashful' => 'Tímida',
+            'careful' => 'Cauta',
+            'rash' => 'Alocada',
+            'jolly' => 'Alegre',
+            'naughty' => 'Pícara',
+            'lax' => 'Floja',
+            'quirky' => 'Rara',
+            'naive' => 'Ingenua',
+            'brave' => 'Audaz',
+            'relaxed' => 'Plácida',
+            'quiet' => 'Mansa',
+            'sassy' => 'Grosera',
+            'serious' => 'Seria',
+        );
+    }
 
     public static function getApiData(string $endpoint, bool $fullURL = false) {
 		$url = $fullURL ? $endpoint : self::$baseUrl . trim($endpoint, '/');

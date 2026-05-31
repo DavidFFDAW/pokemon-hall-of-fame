@@ -20,8 +20,15 @@ final class Database
 					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci'
                 ]
             );
+            self::migrate();
         }
 
         return self::$connection;
+    }
+
+    private static function migrate(): void
+    {
+        $sql = file_get_contents(STORAGE_PATH . '/migrations.sql');
+        self::$connection->exec($sql);
     }
 }
