@@ -5,24 +5,24 @@ defined('NOT_FOUND_TEMPLATE') || define('NOT_FOUND_TEMPLATE', '404');
 defined('DEFAULT_LAYOUT') || define('DEFAULT_LAYOUT', 'main');
 defined('ADMIN_LAYOUT') || define('ADMIN_LAYOUT', 'admin');
 define('TYPE_MAP', [
-	'normal' => 'normal',
-	'fire' => 'fuego',
-	'water' => 'agua',
-	'electric' => 'eléctrico',
-	'grass' => 'planta',
-	'ice' => 'hielo',
-	'fighting' => 'lucha',
-	'poison' => 'veneno',
-	'ground' => 'tierra',
-	'flying' => 'volador',
-	'psychic' => 'psíquico',
-	'bug' => 'bicho',
-	'rock' => 'roca',
-	'ghost' => 'fantasma',
-	'dragon' => 'dragón',
-	'dark' => 'siniestro',
-	'steel' => 'acero',
-	'fairy' => 'hada',
+    'normal' => 'normal',
+    'fire' => 'fuego',
+    'water' => 'agua',
+    'electric' => 'eléctrico',
+    'grass' => 'planta',
+    'ice' => 'hielo',
+    'fighting' => 'lucha',
+    'poison' => 'veneno',
+    'ground' => 'tierra',
+    'flying' => 'volador',
+    'psychic' => 'psíquico',
+    'bug' => 'bicho',
+    'rock' => 'roca',
+    'ghost' => 'fantasma',
+    'dragon' => 'dragón',
+    'dark' => 'siniestro',
+    'steel' => 'acero',
+    'fairy' => 'hada',
 ]);
 
 function e(string $string): string
@@ -30,9 +30,14 @@ function e(string $string): string
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
-function get_poke_type (string $type): string
+function get_poke_type(string $type): string
 {
-	return TYPE_MAP[$type] ?? $type;
+    return TYPE_MAP[$type] ?? $type;
+}
+
+function starts_with(string $string, string $start): bool
+{
+    return strncmp($string, $start, strlen($start)) === 0;
 }
 
 function get_request_path(): string
@@ -48,6 +53,16 @@ function get_request_path(): string
     }
 
     return $finale;
+}
+
+function get_api_route(string $path): array
+{
+    $apiPath = substr($path, strlen('api/'));
+    $apiFile = BASE_PATH . '/pages/api/' . $apiPath . '.php';
+    return array(
+        'path' => $apiFile,
+        'is_file' => is_file($apiFile),
+    );
 }
 
 function route_to_template(string $path): string
@@ -194,15 +209,15 @@ function redirect(string $url): void
 }
 function response(string $content, int $statusCode = 200, array $data = []): void
 {
-	$code = $statusCode >= 100 && $statusCode < 600 ? $statusCode : 200;
-	$resp = array(
-		'code' => $code,
-		'message' => $content,
-		'error' => $code >= 300,
-		'success' => $code >= 200 && $code < 300,
-		'data' => $data
-	);
-	header('Content-Type: application/json');
-	http_response_code($code);
-	die(json_encode($resp));
+    $code = $statusCode >= 100 && $statusCode < 600 ? $statusCode : 200;
+    $resp = array(
+        'code' => $code,
+        'message' => $content,
+        'error' => $code >= 300,
+        'success' => $code >= 200 && $code < 300,
+        'data' => $data
+    );
+    header('Content-Type: application/json');
+    http_response_code($code);
+    die(json_encode($resp));
 }

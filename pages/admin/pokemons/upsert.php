@@ -22,7 +22,8 @@ if ($currentPokemon) {
 }
 
 if (is_post_request()) {
-    debug($_POST);
+    $post = new PostController();
+    $post->handlePokemonUpsert();
 }
 ?>
 
@@ -292,11 +293,13 @@ if (is_post_request()) {
         margin-bottom: 20px;
         gap: 10px;
     }
+
     form.pokemon-upsert-step-checkout .pokemon-preview-container img {
         width: 120px;
         height: 120px;
         object-fit: contain;
     }
+
     form.pokemon-upsert-step-checkout .pokemon-preview-container span {
         flex: 1;
         display: block;
@@ -311,6 +314,7 @@ if (is_post_request()) {
     form.pokemon-upsert-step-checkout .pokemon-preview-container[data-shiny="true"] img.poke-image {
         display: none;
     }
+
     form.pokemon-upsert-step-checkout .pokemon-preview-container[data-shiny="true"] img.poke-shiny-image {
         display: block;
     }
@@ -394,7 +398,13 @@ if (is_post_request()) {
         </header>
 
         <div class="pokemon-data-container">
-            <div class="pokemon-preview-container" id="poke-preview"></div>
+            <div class="pokemon-preview-container" id="poke-preview">
+                <?php if ($currentPokemon) : ?>
+                    <img class="poke-image" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/<?= $currentPokemon['id']; ?>.png" alt="<?= $currentPokemon['name']; ?> icon" />
+                    <img class="poke-image poke-shiny-image" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/<?= $currentPokemon['id']; ?>.png" alt="<?= $currentPokemon['name']; ?> shiny icon" />
+                    <span><?= $currentPokemon['name']; ?></span>
+                <?php endif; ?>
+            </div>
 
             <div class="upsert-datas-container">
                 <label class="label">
@@ -417,7 +427,12 @@ if (is_post_request()) {
 
                 <label class="label">
                     <span class="label">Habilidad</span>
-                    <input type="text" id="ability" name="ability" value="<?= $savedPokemon['ability'] ?? ''; ?>" maxlength="50" />
+                    <select id="ability" name="ability" value="<?= $savedPokemon['ability'] ?? ''; ?>">
+                        <option value="">-- Selecciona una habilidad --</option>
+                        <?php if (isset($savedPokemon['ability'])) : ?>
+                            <option value="<?= $savedPokemon['ability']; ?>" selected><?= $savedPokemon['ability']; ?></option>
+                        <?php endif; ?>
+                    </select>
                 </label>
 
                 <label class="label">
@@ -445,21 +460,21 @@ if (is_post_request()) {
 
                 <div class="pokemon-gender-container">
                     <label class="label radio-label">
-                        <input type="radio" name="gender" value="m" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'm') ? 'checked' : ''; ?>  required />
+                        <input type="radio" name="gender" value="m" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'm') ? 'checked' : ''; ?> required />
                         <div class="label inner gender-inner">
                             <i class="bi bi-gender-male"></i>
                             <span>Masculino</span>
                         </div>
                     </label>
                     <label class="label radio-label">
-                        <input type="radio" name="gender" value="f" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'f') ? 'checked' : ''; ?>  required />
+                        <input type="radio" name="gender" value="f" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'f') ? 'checked' : ''; ?> required />
                         <div class="label inner gender-inner">
                             <i class="bi bi-gender-female"></i>
                             <span>Femenino</span>
                         </div>
                     </label>
                     <label class="label radio-label">
-                        <input type="radio" name="gender" value="u" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'u') ? 'checked' : ''; ?>  required />
+                        <input type="radio" name="gender" value="u" <?= (isset($savedPokemon['gender']) && $savedPokemon['gender'] === 'u') ? 'checked' : ''; ?> required />
                         <div class="label inner gender-inner">
                             <i class="bi bi-gender-ambiguous"></i>
                             <span>Desconocido</span>
@@ -562,23 +577,45 @@ if (is_post_request()) {
         }, 200);
     }
 
-    function handlePokemonChange(event, element) {
+    function updateAbilities(abilities) {
+        const abilitySelect = document.getElementById('ability');
+        abilitySelect.innerHTML = '<option value="">-- Selecciona una habilidad --</option>';
+        const fragment = document.createDocumentFragment();
+        for (const ability of abilities) {
+            const option = document.createElement('option');
+            option.value = ability;
+            option.textContent = ability;
+            if (savedPokemon && savedPokemon.ability === ability) {
+                option.selected = true;
+            }
+            fragment.appendChild(option);
+        }
+        abilitySelect.appendChild(fragment);
+    }
+
+    async function handlePokemonChange(event, element) {
+        setBodyLoading(true);
         const pokemonId = element.value;
-        const pokemonData = pokemons.find(p => p.id == pokemonId);
-        console.log('pokemonData', pokemonData);
-        
-        currentPokemonData = pokemonData;
-        const selectedPokemon = selectedPokemonTemplate.cloneNode(true);
-        const images = selectedPokemon.querySelectorAll('img.poke-image');
-        images.forEach(img => {
-            img.setAttribute('src', img.src.replace('[id]', Number(pokemonData.id)));
-            img.setAttribute('alt', img.alt.replace('{{name}}', pokemonData.name));
-        });
-        selectedPokemon.querySelector('span').textContent = pokemonData.name;
-        const previewContainer = document.getElementById('poke-preview');
-        previewContainer.innerHTML = '';
-        previewContainer.appendChild(selectedPokemon);
-        setAutoNextStep();
+        try {
+            const response = await fetch(`<?= BASE_HOST ?>/api/pokemon?id=${pokemonId}`).then(res => res.json());
+            const pokemonData = response.data;
+            updateAbilities(pokemonData.abilities);
+            const selectedPokemon = selectedPokemonTemplate.cloneNode(true);
+            const images = selectedPokemon.querySelectorAll('img.poke-image');
+            images.forEach(img => {
+                img.setAttribute('src', img.src.replace('[id]', Number(pokemonData.id)));
+                img.setAttribute('alt', img.alt.replace('{{name}}', pokemonData.name));
+            });
+            selectedPokemon.querySelector('span').textContent = pokemonData.name;
+            const previewContainer = document.getElementById('poke-preview');
+            previewContainer.innerHTML = '';
+            previewContainer.appendChild(selectedPokemon);
+            setAutoNextStep();
+        } catch (error) {
+            console.error('Error fetching Pokémon data:', error);
+        } finally {
+            setBodyLoading(false);
+        }
     }
 
     function handleShinyChange(event, element) {

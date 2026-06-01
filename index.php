@@ -19,7 +19,7 @@ define('VIEWS_PATH', $directory . '/pages');
 define('LAYOUTS_PATH', $directory . '/layouts');
 define('STORAGE_PATH', $directory . '/storage');
 
-$isHttp = isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'http';
+$isHttp = DEV ? true : isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] === 'http';
 define('BASE_URI', '/');
 define('BASE_HOST', ($isHttp ? 'http' : 'https') . '://' . $_SERVER['HTTP_HOST']);
 define('JS_URI', BASE_URI . 'assets/js');
@@ -32,8 +32,8 @@ define('IS_POST_REQUEST', $_SERVER['REQUEST_METHOD'] === 'POST');
 require BASE_PATH . '/functions.php';
 
 spl_autoload_register(function ($class) {
-	$file = CLASSES_PATH . '/' . $class . '.php';
-	if (file_exists($file)) require_once $file;
+    $file = CLASSES_PATH . '/' . $class . '.php';
+    if (file_exists($file)) require_once $file;
 });
 
 $currentRoute = get_request_path();
@@ -44,6 +44,13 @@ if ($currentRoute === 'admin' && !$isUserLogged)
     redirect('/login');
 
 try {
+    if (starts_with($currentRoute, 'api')) {
+        header('Content-Type: application/json');
+        $apiRoute = get_api_route($currentRoute);
+        if (!$apiRoute['is_file']) response('API endpoint not found', 404);
+        require_once $apiRoute['path'];
+        exit;
+    }
     // once we check the routes -> load the templates
     $template = route_to_template($currentRoute);
     $layout = layout_for_template($template);

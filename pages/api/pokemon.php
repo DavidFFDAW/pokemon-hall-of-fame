@@ -3,7 +3,6 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-require_once __DIR__ . '/../index.php';
 
 if (!isset($_GET['id']))
     response('ID is required', 400);
@@ -20,5 +19,7 @@ foreach ($pokemonData['abilities'] ?? [] as $ability) {
 }
 
 response('Pokemon data retrieved successfully', 200, [
+    'id' => $pokemonData['id'] ?? null,
+    'name' => $pokemonData['name'] ?? null,
     'abilities' => $abilities
 ]);
